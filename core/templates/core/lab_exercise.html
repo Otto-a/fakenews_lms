@@ -1,0 +1,32 @@
+<!-- core/templates/core/lab_exercise.html -->
+{% extends 'core/base.html' %}
+{% block page_title %}{{ lab.title }}{% endblock %}
+
+{% block content %}
+<div class="lab-container">
+    <!-- Left: Article Content -->
+    <div class="sample-article-panel">
+        <span style="font-size: 0.75rem; color: #b45309; font-weight: 700;">⚠️ SAMPLE ARTICLE</span>
+        <h2 style="margin: 15px 0;">{{ lab.article_headline }}</h2>
+        <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 20px;">{{ lab.article_meta }}</p>
+        <div style="line-height: 1.6; font-size: 1rem;">{{ lab.article_body|linebreaks }}</div>
+    </div>
+
+    <!-- Right: Checklist -->
+    <div class="checklist-panel">
+        <h2>Red Flag Checklist</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div style="margin: 20px 0;">
+                {% for flag in red_flags %}
+                <label style="display: block; margin-bottom: 15px; cursor: pointer;">
+                    <input type="checkbox" name="flags" value="{{ flag.id }}" style="margin-right: 10px;">
+                    {{ flag.label }}
+                </label>
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Lab Evaluation</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

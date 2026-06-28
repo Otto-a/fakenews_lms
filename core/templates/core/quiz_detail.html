@@ -1,0 +1,67 @@
+<!-- core/templates/core/quiz_detail.html -->
+{% extends 'core/base.html' %}
+{% block page_title %}{{ module.code }} Evaluation Quiz{% endblock %}
+
+{% block content %}
+<div class="panel" style="max-width: 800px; margin: 0 auto; padding: 30px;">
+    {% if submission %}
+        <div style="text-align: center; margin-bottom: 40px;">
+            {% if submission.passed %}
+                <!-- Passed UI & Badge -->
+                <div style="border: 1px solid #f59e0b; border-radius: 50px; display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: #fffbeb; color: #b45309; font-weight: 600; margin-bottom: 20px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15v5s3 2 3 2 3-2 3-2v-5"/><circle cx="12" cy="9" r="6"/></svg>
+                    Badge unlocked: {{ module.badge_name }}
+                </div>
+                <h2 style="color: var(--green-complete); margin-bottom: 10px;">🎉 Quiz Passed!</h2>
+            {% else %}
+                <!-- Failed UI -->
+                <h2 style="color: #dc2626; margin-bottom: 10px;">❌ Quiz Not Passed</h2>
+            {% endif %}
+            
+            <p style="font-size: 2.5rem; font-weight: 800; margin: 15px 0;">{{ submission.score_percentage|floatformat:0 }}%</p>
+            <p style="color: #64748b;">Required Passing Score: 80%</p>
+        </div>
+
+        <div style="display: flex; gap: 15px; margin-top: 30px; justify-content: center;">
+            {% if submission.passed %}
+                {% if next_module %}
+                    <a href="{% url 'module_list' %}" class="btn btn-primary">Proceed to Next Module →</a>
+                {% else %}
+                    <a href="{% url 'certificates' %}" class="btn btn-accent">View Final Certificate</a>
+                {% endif %}
+            {% else %}
+                <form method="POST" style="margin: 0;">
+                    {% csrf_token %}
+                    <input type="hidden" name="retake" value="true">
+                    <button type="submit" class="btn btn-primary">Try Again</button>
+                </form>
+            {% endif %}
+        </div>
+        
+    {% else %}
+        <!-- Active Quiz Form -->
+        <form method="POST">
+            {% csrf_token %}
+            {% for q in questions %}
+            <div style="margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px;">
+                <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 15px;">Q{{ forloop.counter }}: {{ q.text }}</p>
+                
+                <label style="display: block; margin-bottom: 10px; cursor: pointer;">
+                    <input type="radio" name="question_{{ q.id }}" value="A" required> {{ q.choice_a }}
+                </label>
+                <label style="display: block; margin-bottom: 10px; cursor: pointer;">
+                    <input type="radio" name="question_{{ q.id }}" value="B"> {{ q.choice_b }}
+                </label>
+                <label style="display: block; margin-bottom: 10px; cursor: pointer;">
+                    <input type="radio" name="question_{{ q.id }}" value="C"> {{ q.choice_c }}
+                </label>
+                <label style="display: block; margin-bottom: 10px; cursor: pointer;">
+                    <input type="radio" name="question_{{ q.id }}" value="D"> {{ q.choice_d }}
+                </label>
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Quiz Answers</button>
+        </form>
+    {% endif %}
+</div>
+{% endblock %}

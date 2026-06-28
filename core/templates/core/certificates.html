@@ -1,0 +1,65 @@
+<!-- core/templates/core/certificates.html -->
+{% extends 'core/base.html' %}
+{% block page_title %}My Achievements{% endblock %}
+
+{% block content %}
+<div class="panel">
+    <h2>Earned Module Badges</h2>
+    <p style="color: #64748b; margin-bottom: 20px;">You unlock a digital skill badge as soon as you pass each module's quiz.</p>
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        {% for badge in earned_badges %}
+        <div style="text-align: center; padding: 20px; border: 1px solid #10b981; background: #f0fdf4; border-radius: 8px; width: 150px;">
+            <div style="width: 50px; height: 50px; border-radius: 50%; background-color: #d1fae5; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; font-size: 1.5rem;">
+                🎖️
+            </div>
+            <strong style="color: #065f46; font-size: 0.9rem;">{{ badge.badge_name }}</strong>
+            <p style="font-size: 0.75rem; color: #047857; margin-top: 5px;">{{ badge.code }}</p>
+        </div>
+        {% empty %}
+        <p style="color: #64748b;">No badges earned yet. Pass a module quiz (>=80%) to unlock your first badge!</p>
+        {% endfor %}
+    </div>
+</div>
+
+{% if certificate %}
+<div class="panel" style="margin-top: 30px;">
+    <h2>Course Completion Certificate</h2>
+    <p style="color: #64748b; margin-bottom: 20px;">Congratulations! You have completed the entire FakeNews Lit curriculum. You can print or download your certificate below.</p>
+    
+    <div id="printArea" class="cert-canvas" style="border: 10px double var(--navy-dark); padding: 50px; text-align: center; background: white; margin-bottom: 20px;">
+        <h3 style="text-transform: uppercase; color: #64748b; letter-spacing: 2px;">Certificate of Program Completion</h3>
+        <p style="margin: 20px 0; color: #94a3b8; font-size: 1.1rem;">This is proudly awarded to</p>
+        
+        <!-- FIX: Fallback to username if first/last name is not set -->
+        <h1 style="font-size: 3rem; color: var(--navy-dark); font-family: Georgia, serif; margin: 20px 0;">
+            {% if request.user.first_name or request.user.last_name %}
+                {{ request.user.first_name }} {{ request.user.last_name }}
+            {% else %}
+                {{ request.user.username }}
+            {% endif %}
+        </h1>
+        
+        <p style="margin: 20px 0; color: #94a3b8; font-size: 1.1rem;">for successfully completing all advanced modules of the</p>
+        <h2 style="color: var(--brand-blue); font-size: 1.8rem;">FakeNews Lit Media Literacy Core Program</h2>
+        
+        <p style="margin-top: 30px; font-size: 1rem; color: #64748b;">Graduated on: <strong>{{ certificate.issued_date }}</strong></p>
+        
+        <div style="display: flex; justify-content: space-between; margin-top: 50px; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 0.85rem; color: #94a3b8;">
+            <span>ID: {{ certificate.id }}</span>
+            <span>Verified Digital Signature</span>
+        </div>
+    </div>
+    
+    <button onclick="window.print();" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+        Print / Download PDF
+    </button>
+</div>
+{% else %}
+<div class="panel" style="margin-top: 30px; border-left: 4px solid var(--brand-accent);">
+    <h2>Final Certificate Locked</h2>
+    <p style="color: #64748b;">The program certificate is awarded upon completing **all** available modules. Continue passing quizzes to unlock your final download link.</p>
+</div>
+{% endif %}
+
+{% endblock %}

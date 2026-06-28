@@ -1,0 +1,65 @@
+<!-- core/templates/core/lesson_detail.html -->
+{% extends 'core/base.html' %}
+{% block page_title %}{{ module.code }}: {{ module.title }}{% endblock %}
+
+{% block content %}
+<!-- Simple, robust 2-Column Split Grid -->
+<div class="lesson-split-view">
+    
+    <!-- Left Column: Lesson Selector Sidebar -->
+    <div style="background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 20px;">
+        <h3 style="margin-bottom: 15px; color: var(--navy-dark); font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Module Lessons</h3>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+            {% for item in lessons_data %}
+            <a href="{% url 'lesson_detail' item.lesson.id %}" 
+               style="display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 6px; text-decoration: none; font-size: 0.95rem; transition: all 0.2s;
+                      {% if item.active %}background-color: #eff6ff; color: var(--brand-blue); font-weight: 600;{% else %}color: var(--text-main);{% endif %}">
+                <span>{% if item.completed %}✅{% else %}📄{% endif %}</span>
+                <span>{{ item.lesson.title }}</span>
+            </a>
+            {% endfor %}
+        </div>
+        
+        <!-- Module Progress counters -->
+        <div style="margin-top: 25px; border-top: 1px solid var(--border-color); padding-top: 15px; font-size: 0.85rem; color: #64748b;">
+            <span style="text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Module Progress</span>
+            <p style="margin-top: 5px; font-size: 1rem; color: var(--navy-dark);"><strong>{{ completed_lessons_count }} of {{ total_lessons_count }} done</strong></p>
+        </div>
+    </div>
+
+    <!-- Right Column: Video & Lecture Reading Panel -->
+    <div class="panel" style="padding: 30px; margin-bottom: 0;">
+        <h2 style="font-size: 1.6rem; margin-bottom: 20px; color: var(--navy-dark);">{{ lesson.title }}</h2>
+        
+        {% if lesson.video_url %}
+        <!-- Large, immersive video player (Explicitly sized for better presentation) -->
+        <div style="width: 100%; max-width: 850px; margin-bottom: 25px; border-radius: 8px; overflow: hidden; background: #000; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+            <iframe src="{{ lesson.video_url }}" 
+                    style="width: 100%; height: 450px; display: block; border: 0;" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen>
+            </iframe>
+        </div>
+        {% endif %}
+        
+        <!-- Reading content area -->
+        <div style="line-height: 1.8; font-size: 1.05rem; color: var(--text-main); margin-bottom: 30px;">
+            {{ lesson.content|safe }}
+        </div>
+
+        <!-- Bottom Navigation Controls -->
+        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 20px;">
+            <span></span>
+            {% if next_lesson %}
+                <a href="{% url 'lesson_detail' next_lesson.id %}" class="btn btn-primary">Next Lesson →</a>
+            {% else %}
+                <div style="display: flex; gap: 10px;">
+                    <a href="{% url 'lab_exercise' module.id %}" class="btn btn-accent">Enter Practical Lab</a>
+                    <a href="{% url 'quiz_detail' module.id %}" class="btn btn-primary">Take Module Quiz →</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

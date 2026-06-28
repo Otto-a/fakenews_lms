@@ -1,0 +1,42 @@
+<!-- core/templates/registration/register.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join FakeNews Lit</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="auth-wrapper">
+    <div class="auth-card">
+        <h2 style="color: var(--navy-dark); text-align: center; margin-bottom: 8px;">Create an Account</h2>
+        <p style="color: #64748b; text-align: center; margin-bottom: 24px; font-size: 0.9rem;">Start your media literacy path today.</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            {% if form.errors %}
+                <div class="error-banner">
+                    Please correct the errors highlighted below.
+                </div>
+            {% endif %}
+            
+            {% for field in form %}
+                <div class="auth-form-group">
+                    <label>{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <small style="color: #ef4444;">{{ field.errors.0 }}</small>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 15px;">Sign Up</button>
+        </form>
+        
+        <p style="text-align: center; font-size: 0.85rem; margin-top: 20px; color: #64748b;">
+            Already have an account? <a href="{% url 'login' %}" style="color: var(--brand-blue); font-weight: 600; text-decoration: none;">Sign In</a>
+        </p>
+    </div>
+</body>
+</html>

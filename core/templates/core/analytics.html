@@ -1,0 +1,108 @@
+<!-- core/templates/core/analytics.html -->
+{% extends 'core/base.html' %}
+{% block page_title %}System Reports & Analytics{% endblock %}
+
+{% block content %}
+<!-- Include Chart.js core library via CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Defensive, highly secure config wrapper to pass Django template variables to main.js -->
+<div id="analyticsConfig" 
+     data-months='{{ enrollment_months|safe }}'
+     data-counts='{{ enrollment_counts|safe }}'
+     data-labels='{{ module_labels|safe }}'
+     data-completions='{{ completion_counts|safe }}'
+     style="display: none;">
+</div>
+
+<div class="metric-grid">
+    <div class="metric-card">
+        <h3>Total Enrollments</h3>
+        <div class="value">{{ total_enrollments }}</div>
+    </div>
+    <div class="metric-card">
+        <h3>Overall Completion Rate</h3>
+        <div class="value">{{ global_completion_rate }}%</div>
+    </div>
+    <div class="metric-card">
+        <h3>Avg Quiz Score</h3>
+        <div class="value">{{ global_quiz_avg }}%</div>
+    </div>
+    <div class="metric-card">
+        <h3>Certified Students</h3>
+        <div class="value">{{ certified_students_count }}</div>
+    </div>
+</div>
+
+<div class="panel-row" style="margin-bottom: 30px;">
+    <!-- Line Chart Frame -->
+    <div class="panel">
+        <h2>Student Enrollment Over Time</h2>
+        <div style="height: 250px; position: relative;">
+            <canvas id="enrollmentChart"></canvas>
+        </div>
+    </div>
+    
+    <!-- Bar Chart Frame -->
+    <div class="panel">
+        <h2>Module Completion Rates (%)</h2>
+        <div style="height: 250px; position: relative;">
+            <canvas id="completionChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Student Progress Directory -->
+<div class="panel">
+    <div class="filter-bar">
+        <h2>Student Progress Directory</h2>
+        
+        <form method="GET" class="filter-form">
+            <input type="text" name="q" placeholder="Search student name..." value="{{ search_query }}" class="filter-input">
+            
+            <select name="status" class="filter-input">
+                <option value="all" {% if filter_status == 'all' %}selected{% endif %}>All Statuses</option>
+                <option value="active" {% if filter_status == 'active' %}selected{% endif %}>Active</option>
+                <option value="certified" {% if filter_status == 'certified' %}selected{% endif %}>Certified</option>
+            </select>
+            
+            <button type="submit" class="btn btn-primary" style="padding: 8px 16px;">Filter Directory</button>
+            <a href="{% url 'analytics' %}" class="btn" style="background: #e2e8f0; color: #475569; padding: 8px 16px; text-decoration: none;">Reset</a>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Enrolled Date</th>
+                    <th>Modules Done</th>
+                    <th>Quiz Average</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in students_data %}
+                <tr>
+                    <td><strong>{{ record.student.get_full_name|default:record.student.username }}</strong></td>
+                    <td>{{ record.student.date_joined|date:"M d, Y" }}</td>
+                    <td>{{ record.completed_count }}/6</td>
+                    <td>{{ record.avg_score }}%</td>
+                    <td>
+                        {% if record.status == 'Certified' %}
+                            <span class="badge-tag badge-complete">Certified</span>
+                        {% else %}
+                            <span class="badge-tag badge-active">Active</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align: center; color: #64748b;">No matching student progress records found.</td>
+                </tr>
+                {% endfor %}
+        </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

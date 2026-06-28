@@ -1,0 +1,15 @@
+{% extends 'core/base.html' %}
+{% block page_title %}Lab Exercises{% endblock %}
+{% block content %}
+<div class="panel">
+    <h2>Available Exercises</h2>
+    <div class="module-list-group">
+        {% for lab in labs %}
+        <div class="module-item">
+            <span>{{ lab.title }}</span>
+            <a href="{% url 'lab_exercise' lab.module.id %}" class="btn btn-primary">Open Lab</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

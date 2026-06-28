@@ -1,0 +1,49 @@
+<!-- core/templates/core/home.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FakeNews Lit - Fake News Literacy System</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body style="background-color: var(--bg-primary);">
+
+    <!-- Top Navigation Header -->
+    <header style="background: white; border-bottom: 1px solid var(--border-color); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+              <img src="{% static 'images/logo.png' %}" alt="Logo" style="height: 60px; width: auto; display: block; border-radius: 50%;">
+            <h2 style="color: var(--navy-dark); font-weight: 700;">FakeNews Lit</h2>
+        </div>
+        <div>
+            <a href="{% url 'login' %}" class="btn" style="color: var(--navy-dark); margin-right: 15px;">Sign In</a>
+            <a href="{% url 'register' %}" class="btn btn-primary">Get Started</a>
+        </div>
+    </header>
+
+    <!-- Hero banner -->
+    <section class="hero-section">
+        <h1>Verify the News before you share it</h1>
+        <p>Develop critical skills to identify clickbait, spot misinformation, perform factual cross-verification, and earn media literacy certifications.</p>
+        <a href="{% url 'register' %}" class="btn btn-accent" style="font-size: 1.1rem; padding: 12px 28px;">Register for Free</a>
+    </section>
+
+    <!-- Feature Grid -->
+    <section class="feature-grid">
+        <div class="feature-card">
+            <h3 style="margin-bottom: 15px; color: var(--navy-dark);">Sequential Lessons</h3>
+            <p style="color: #64748b; font-size: 0.95rem;">Progress through interactive educational modules. Gain certificates as you complete modules.</p>
+        </div>
+        <div class="feature-card">
+            <h3 style="margin-bottom: 15px; color: var(--navy-dark);">Practical Labs</h3>
+            <p style="color: #64748b; font-size: 0.95rem;">Analyze real-world mock articles, evaluate headlines, identify red flags, and complete credibility checklists.</p>
+        </div>
+        <div class="feature-card">
+            <h3 style="margin-bottom: 15px; color: var(--navy-dark);">Digital Certifications</h3>
+            <p style="color: #64748b; font-size: 0.95rem;">Unlock verified completion certificates and earn badges to prove your news literacy capabilities.</p>
+        </div>
+    </section>
+
+</body>
+</html>

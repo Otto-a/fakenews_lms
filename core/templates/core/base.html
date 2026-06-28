@@ -1,0 +1,71 @@
+<!-- core/templates/core/base.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FakeNews Lit</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="app-container">
+        <aside>
+            <div>
+                <!-- Logo Frame -->
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 2rem;">
+                    <img src="{% static 'images/logo.png' %}" alt="Logo" style="height: 60px; width: auto; display: block; border-radius: 50%;">
+                    <h2 style="margin-bottom: 0; font-weight: 700;">FakeNews Lit</h2>
+                </div>
+                
+                <!-- Safe Navigation Links (No naked lab links) -->
+                <nav>
+                    <a href="{% url 'dashboard' %}">Dashboard</a>
+                    <a href="{% url 'module_list' %}">Learning Modules</a>
+                    <a href="{% url 'certificates' %}">My Certificates</a>
+                    <a href="{% url 'lab_list' %}">Lab Exercises</a>
+                    {% if request.user.is_staff %}
+                    <a href="{% url 'analytics' %}">Reports & Analytics</a>
+                    {% endif %}
+                    
+                </nav>
+                
+            </div>
+            
+            <div style="border-top: 1px solid var(--navy-light); padding-top: 15px;">
+                <form action="{% url 'logout' %}" method="post" style="display: inline; width: 100%;">
+                    {% csrf_token %}
+                    <button type="submit" style="background: none; border: none; color: #f87171; font-weight: 600; cursor: pointer; text-align: left; padding: 10px 15px; width: 100%; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                        Sign Out
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <main>
+            <div class="top-nav">
+                <h1>{% block page_title %}Dashboard{% endblock %}</h1>
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <div class="nav-user-row">
+                        <div class="avatar-initial">
+                            {{ request.user.first_name|slice:":1"|upper|default:request.user.username|slice:":1"|upper }}
+                        </div>
+                        <span style="font-weight: 600; color: var(--navy-dark);">{{ request.user.first_name|default:request.user.username }}</span>
+                    </div>
+
+                    <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn" style="background: #fee2e2; color: #ef4444; padding: 6px 14px; font-size: 0.85rem; border-radius: 6px;">
+                            Sign Out
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

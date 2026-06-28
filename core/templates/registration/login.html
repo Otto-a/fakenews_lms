@@ -1,0 +1,43 @@
+<!-- core/templates/registration/login.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - FakeNews Lit</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="auth-wrapper">
+    <div class="auth-card">
+        <h2 style="color: var(--navy-dark); text-align: center; margin-bottom: 8px;">FakeNews Lit</h2>
+        <p style="color: #64748b; text-align: center; margin-bottom: 24px; font-size: 0.9rem;">Please sign in to access your modules.</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            {% if form.errors %}
+                <div class="error-banner">
+                    Your username and password did not match. Please try again.
+                </div>
+            {% endif %}
+            
+            <div class="auth-form-group">
+                <label>Username</label>
+                <input type="text" name="username" required>
+            </div>
+            
+            <div class="auth-form-group" style="margin-bottom: 24px;">
+                <label>Password</label>
+                <input type="password" name="password" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
+        </form>
+        
+        <!-- Added Registration Link -->
+        <p style="text-align: center; font-size: 0.85rem; margin-top: 20px; color: #64748b;">
+            Don't have an account? <a href="{% url 'register' %}" style="color: var(--brand-blue); font-weight: 600; text-decoration: none;">Register</a>
+        </p>
+    </div>
+</body>
+</html>
