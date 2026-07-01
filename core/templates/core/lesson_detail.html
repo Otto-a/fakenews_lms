@@ -32,7 +32,7 @@
         <h2 style="font-size: 1.6rem; margin-bottom: 20px; color: var(--navy-dark);">{{ lesson.title }}</h2>
         
         {% if lesson.video_url %}
-        <!-- Large, immersive video player (Explicitly sized for better presentation) -->
+        <!-- Video Player -->
         <div style="width: 100%; max-width: 850px; margin-bottom: 25px; border-radius: 8px; overflow: hidden; background: #000; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
             <iframe src="{{ lesson.video_url }}" 
                     style="width: 100%; height: 450px; display: block; border: 0;" 
@@ -54,7 +54,10 @@
                 <a href="{% url 'lesson_detail' next_lesson.id %}" class="btn btn-primary">Next Lesson →</a>
             {% else %}
                 <div style="display: flex; gap: 10px;">
-                    <a href="{% url 'lab_exercise' module.id %}" class="btn btn-accent">Enter Practical Lab</a>
+                    <!-- FIX: Only render the Practical Lab button if a lab exists in the database -->
+                    {% if module.labs.exists %}
+                        <a href="{% url 'lab_exercise' module.id %}" class="btn btn-accent">Enter Practical Lab</a>
+                    {% endif %}
                     <a href="{% url 'quiz_detail' module.id %}" class="btn btn-primary">Take Module Quiz →</a>
                 </div>
             {% endif %}

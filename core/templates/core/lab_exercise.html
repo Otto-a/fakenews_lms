@@ -4,29 +4,58 @@
 
 {% block content %}
 <div class="lab-container">
-    <!-- Left: Article Content -->
+    <!-- Left Panel: Article Content -->
     <div class="sample-article-panel">
         <span style="font-size: 0.75rem; color: #b45309; font-weight: 700;">⚠️ SAMPLE ARTICLE</span>
         <h2 style="margin: 15px 0;">{{ lab.article_headline }}</h2>
         <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 20px;">{{ lab.article_meta }}</p>
-        <div style="line-height: 1.6; font-size: 1rem;">{{ lab.article_body|linebreaks }}</div>
+        <div style="line-height: 1.8; font-size: 1.05rem; color: var(--text-main);">
+            {{ lab.article_body|linebreaks }}
+        </div>
     </div>
 
-    <!-- Right: Checklist -->
+    <!-- Right Panel: Checklist / Evaluation Results -->
     <div class="checklist-panel">
         <h2>Red Flag Checklist</h2>
-        <form method="POST">
-            {% csrf_token %}
-            <div style="margin: 20px 0;">
-                {% for flag in red_flags %}
-                <label style="display: block; margin-bottom: 15px; cursor: pointer;">
-                    <input type="checkbox" name="flags" value="{{ flag.id }}" style="margin-right: 10px;">
-                    {{ flag.label }}
-                </label>
+        <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 20px;">Identify credibility problems in the sample article.</p>
+
+        {% if submission %}
+            <!-- FIX: Redesigned Results Screen to show "Your Verification Score" clearly -->
+            <div style="background-color: #ecfdf5; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #a7f3d0; text-align: center;">
+                <h3 style="color: #065f46; margin-bottom: 5px;">Practice Lab Completed</h3>
+                <p style="font-size: 0.9rem; color: #047857; margin-bottom: 5px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Your Verification Score</p>
+                <p style="font-size: 2.25rem; font-weight: 800; color: var(--green-complete); margin: 5px 0;">{{ submission.score_percentage|floatformat:0 }}%</p>
+            </div>
+            
+            <div class="module-list-group">
+                {% for flag in clues %}
+                <div class="checklist-item" style="border-color: {% if flag.is_true_red_flag %}var(--green-complete){% else %}#f87171{% endif %}; background: #f8fafc; cursor: default;">
+                    <span style="font-weight: bold; color: {% if flag.is_true_red_flag %}var(--green-complete){% else %}#ef4444{% endif %};">
+                        {% if flag.is_true_red_flag %}✅ Correct Flag{% else %}❌ False Flag{% endif %}
+                    </span>
+                    <span style="margin-left: 10px; color: var(--text-main);">{{ flag.label }}</span>
+                </div>
                 {% endfor %}
             </div>
-            <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Lab Evaluation</button>
-        </form>
+            
+            <div style="margin-top: 25px;">
+                <a href="{% url 'module_list' %}" class="btn btn-primary" style="width: 100%;">Return to Modules</a>
+            </div>
+        {% else %}
+            <!-- Interactive Submission Form -->
+            <form method="POST">
+                {% csrf_token %}
+                <div style="margin: 20px 0;">
+                    {% for flag in clues %}
+                    <label class="checklist-item" style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 10px;">
+                        <input type="checkbox" name="flags" value="{{ flag.id }}" style="margin-top: 3px; cursor: pointer;">
+                        <span style="font-size: 0.95rem; line-height: 1.4; color: var(--text-main);">{{ flag.label }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Lab Evaluation</button>
+            </form>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

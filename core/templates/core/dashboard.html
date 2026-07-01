@@ -9,8 +9,8 @@
     <a href="{% url 'module_list' %}" class="btn btn-accent" style="display: inline-block;">Continue Learning →</a>
 </div>
 
-<!-- Removed Study Hours from Grid -->
-<div class="metric-grid" style="grid-template-columns: repeat(3, 1fr);">
+
+<div class="metric-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px,1fr));">
     <div class="metric-card">
         <h3>Modules Tracked</h3>
         <div class="value">{{ enrolled_count }}</div>
@@ -22,6 +22,10 @@
     <div class="metric-card">
         <h3>Quiz Average Score</h3>
         <div class="value">{{ quiz_avg }}%</div>
+    </div>
+    <div class="metric-card">
+        <h3>Avg Lab Score</h3>
+        <div class="value">{{ lab_avg }}%</div>
     </div>
 </div>
 

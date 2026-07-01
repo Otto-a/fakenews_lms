@@ -8,7 +8,6 @@
         <!-- SCORE RESULTS PANEL -->
         <div style="text-align: center; margin-bottom: 40px; padding: 30px; background-color: {% if submission.passed %}#ecfdf5{% else %}#fef2f2{% endif %}; border-radius: 8px; border: 1px solid {% if submission.passed %}#a7f3d0{% else %}#fecaca{% endif %};">
             {% if submission.passed %}
-                <!-- Passed UI & Badge -->
                 <div style="border: 1px solid #f59e0b; border-radius: 50px; display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: #fffbeb; color: #b45309; font-weight: 600; margin-bottom: 20px;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 15v5s3 2 3 2 3-2 3-2v-5"/><circle cx="12" cy="9" r="6"/>
@@ -17,7 +16,6 @@
                 </div>
                 <h2 style="color: var(--green-complete); margin-bottom: 10px;">🎉 Quiz Passed!</h2>
             {% else %}
-                <!-- Failed UI -->
                 <h2 style="color: #dc2626; margin-bottom: 10px;">❌ Quiz Not Passed</h2>
             {% endif %}
             
@@ -25,40 +23,52 @@
             <p style="color: #64748b;">Required Passing Score: 80%</p>
         </div>
 
-        <!-- QUESTION OVERVIEW WITH CORRECT ANSWERS HIGHLIGHTED -->
-        <h2 style="margin-bottom: 20px; font-size: 1.25rem;">Question Review</h2>
-        {% for q in questions %}
-        <div style="padding: 20px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 20px; background: #f8fafc;">
-            <p style="font-weight: 600; margin-bottom: 15px; color: var(--navy-dark);">Q{{ forloop.counter }}: {{ q.text }}</p>
-            
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-                <div style="padding: 10px; border-radius: 6px; {% if q.correct_option == 'A' %}background-color: #d1fae5; border: 1px solid var(--green-complete); color: #065f46; font-weight: 600;{% else %}border: 1px solid #e2e8f0; color: #64748b;{% endif %}">
-                    A) {{ q.choice_a }} {% if q.correct_option == 'A' %} ✅ (Correct Answer){% endif %}
-                </div>
-                <div style="padding: 10px; border-radius: 6px; {% if q.correct_option == 'B' %}background-color: #d1fae5; border: 1px solid var(--green-complete); color: #065f46; font-weight: 600;{% else %}border: 1px solid #e2e8f0; color: #64748b;{% endif %}">
-                    B) {{ q.choice_b }} {% if q.correct_option == 'B' %} ✅ (Correct Answer){% endif %}
-                </div>
-                <div style="padding: 10px; border-radius: 6px; {% if q.correct_option == 'C' %}background-color: #d1fae5; border: 1px solid var(--green-complete); color: #065f46; font-weight: 600;{% else %}border: 1px solid #e2e8f0; color: #64748b;{% endif %}">
-                    C) {{ q.choice_c }} {% if q.correct_option == 'C' %} ✅ (Correct Answer){% endif %}
-                </div>
-                <div style="padding: 10px; border-radius: 6px; {% if q.correct_option == 'D' %}background-color: #d1fae5; border: 1px solid var(--green-complete); color: #065f46; font-weight: 600;{% else %}border: 1px solid #e2e8f0; color: #64748b;{% endif %}">
-                    D) {{ q.choice_d }} {% if q.correct_option == 'D' %} ✅ (Correct Answer){% endif %}
+        <!-- FIX: HIDE ANSWERS IF THE USER FAILED -->
+        {% if submission.passed %}
+            <h2 style="margin-bottom: 20px; font-size: 1.25rem;">Question Review</h2>
+            {% for q in questions %}
+            <div style="padding: 20px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 20px; background: #f8fafc;">
+                <p style="font-weight: 600; margin-bottom: 15px; color: var(--navy-dark);">Q{{ forloop.counter }}: {{ q.text }}</p>
+                
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="padding: 10px; border-radius: 6px; {% if q.correct_option == 'A' %}background-color: #d1fae5; border: 1px solid var(--green-complete); color: #065f46; font-weight: 600;{% else %}border: 1px solid #e2e8f0; color: #64748b;{% endif %}">
+                        A) {{ q.choice_a }} {% if q.correct_option == 'A' %} ✅ (Correct Answer){% endif %}
+                    </div>
+                    <div style="padding: 10px; border-radius: 6px; {% if q.correct_option == 'B' %}background-color: #d1fae5; border: 1px solid var(--green-complete); color: #065f46; font-weight: 600;{% else %}border: 1px solid #e2e8f0; color: #64748b;{% endif %}">
+                        B) {{ q.choice_b }} {% if q.correct_option == 'B' %} ✅ (Correct Answer){% endif %}
+                    </div>
+                    <div style="padding: 10px; border-radius: 6px; {% if q.correct_option == 'C' %}background-color: #d1fae5; border: 1px solid var(--green-complete); color: #065f46; font-weight: 600;{% else %}border: 1px solid #e2e8f0; color: #64748b;{% endif %}">
+                        C) {{ q.choice_c }} {% if q.correct_option == 'C' %} ✅ (Correct Answer){% endif %}
+                    </div>
+                    <div style="padding: 10px; border-radius: 6px; {% if q.correct_option == 'D' %}background-color: #d1fae5; border: 1px solid var(--green-complete); color: #065f46; font-weight: 600;{% else %}border: 1px solid #e2e8f0; color: #64748b;{% endif %}">
+                        D) {{ q.choice_d }} {% if q.correct_option == 'D' %} ✅ (Correct Answer){% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
-        {% endfor %}
+            {% endfor %}
+        {% else %}
+            <!-- Shows a clean message to failing students -->
+            <p style="text-align: center; color: #64748b; font-style: italic; margin-bottom: 30px;">
+                 Please review the lessons and try again!
+            </p>
+        {% endif %}
         
         <!-- ACTION BUTTONS -->
         <div style="display: flex; gap: 15px; margin-top: 30px; justify-content: center; align-items: center; flex-wrap: wrap;">
             {% if submission.passed %}
-                <!-- PASSED ACTIONS (No Retake Button) -->
                 {% if next_module %}
                     <a href="{% url 'module_list' %}" class="btn btn-primary">Proceed to Next Module →</a>
                 {% else %}
                     <a href="{% url 'certificates' %}" class="btn btn-accent">View Final Certificate</a>
                 {% endif %}
+                
+                <!-- Retake button is still available for passed students who just want to practice -->
+                <form method="POST" style="margin: 0;">
+                    {% csrf_token %}
+                    <input type="hidden" name="retake" value="true">
+                    <button type="submit" class="btn" style="background: #e2e8f0; color: #475569;">🔄 Retake Quiz</button>
+                </form>
             {% else %}
-                <!-- FAILED ACTIONS (Can Retake/Try Again) -->
                 <form method="POST" style="margin: 0;">
                     {% csrf_token %}
                     <input type="hidden" name="retake" value="true">
