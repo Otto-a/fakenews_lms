@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="lab-container">
-    <!-- Left Panel: Article Content -->
+    <!-- left part-article Content -->
     <div class="sample-article-panel">
         <span style="font-size: 0.75rem; color: #b45309; font-weight: 700;">⚠️ SAMPLE ARTICLE</span>
         <h2 style="margin: 15px 0;">{{ lab.article_headline }}</h2>
@@ -14,13 +14,12 @@
         </div>
     </div>
 
-    <!-- Right Panel: Checklist / Evaluation Results -->
+    <!-- right part- Checklist / evaluation Results -->
     <div class="checklist-panel">
         <h2>Red Flag Checklist</h2>
         <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 20px;">Identify credibility problems in the sample article.</p>
 
         {% if submission %}
-            <!-- FIX: Redesigned Results Screen to show "Your Verification Score" clearly -->
             <div style="background-color: #ecfdf5; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #a7f3d0; text-align: center;">
                 <h3 style="color: #065f46; margin-bottom: 5px;">Practice Lab Completed</h3>
                 <p style="font-size: 0.9rem; color: #047857; margin-bottom: 5px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Your Verification Score</p>
@@ -42,7 +41,7 @@
                 <a href="{% url 'module_list' %}" class="btn btn-primary" style="width: 100%;">Return to Modules</a>
             </div>
         {% else %}
-            <!-- Interactive Submission Form -->
+            <!-- submission form -->
             <form method="POST">
                 {% csrf_token %}
                 <div style="margin: 20px 0;">

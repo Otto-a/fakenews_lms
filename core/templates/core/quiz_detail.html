@@ -23,7 +23,7 @@
             <p style="color: #64748b;">Required Passing Score: 80%</p>
         </div>
 
-        <!-- FIX: HIDE ANSWERS IF THE USER FAILED -->
+        
         {% if submission.passed %}
             <h2 style="margin-bottom: 20px; font-size: 1.25rem;">Question Review</h2>
             {% for q in questions %}
@@ -47,7 +47,7 @@
             </div>
             {% endfor %}
         {% else %}
-            <!-- Shows a clean message to failing students -->
+            
             <p style="text-align: center; color: #64748b; font-style: italic; margin-bottom: 30px;">
                  Please review the lessons and try again!
             </p>
@@ -62,7 +62,6 @@
                     <a href="{% url 'certificates' %}" class="btn btn-accent">View Final Certificate</a>
                 {% endif %}
                 
-                <!-- Retake button is still available for passed students who just want to practice -->
                 <form method="POST" style="margin: 0;">
                     {% csrf_token %}
                     <input type="hidden" name="retake" value="true">
@@ -84,7 +83,7 @@
         </div>
         
     {% else %}
-        <!-- ACTIVE QUIZ FORM -->
+        <!--  QUIZ FORM -->
         <form method="POST">
             {% csrf_token %}
             {% for q in questions %}

@@ -16,7 +16,7 @@
         </div>
         
         <div style="margin-top: 25px;">
-            <!-- MODULE PROGRESS CONTROLS -->
+            <!-- MODULE PROGRESS CTRLS -->
             {% if data.completed %}
                 <a href="{% url 'lesson_detail' data.module.lessons.first.id %}" class="btn btn-accent" style="background-color: var(--green-complete); width: 100%;">Review Lessons</a>
             {% elif data.is_unlocked %}
@@ -25,7 +25,7 @@
                 <button class="btn" style="width: 100%; background-color: #cbd5e1; color: #64748b; cursor: not-allowed;" disabled>🔒 Lesson Locked</button>
             {% endif %}
             
-            <!-- PERSISTENT PRACTICE LAB LINK (Guarded for safety) -->
+            <!-- LAB LINK -->
             {% if data.module.labs.exists %}
             <div style="margin-top: 15px; text-align: center; border-top: 1px dashed var(--border-color); padding-top: 10px;">
                 <a href="{% url 'lab_exercise' data.module.id %}" style="font-size: 0.85rem; color: var(--brand-accent); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">

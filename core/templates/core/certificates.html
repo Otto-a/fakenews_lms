@@ -3,7 +3,7 @@
 {% block page_title %}My Achievements{% endblock %}
 
 {% block content %}
-<!-- added no-print to hide this panel when printing -->
+
 <div class="panel no-print">
     <h2>Earned Module Badges</h2>
     <p style="color: #64748b; margin-bottom: 20px;">You unlock a digital skill badge as soon as you pass each module's quiz.</p>
@@ -23,15 +23,15 @@
 </div>
 
 {% if certificate %}
-<!-- Styled wrapper to prevent background clashes during print -->
+
 <div style="margin-top: 30px;">
-    <!-- added no-print to hide instructions on print page -->
+    
     <div class="panel no-print">
         <h2>Course Completion Certificate</h2>
         <p style="color: #64748b;">Congratulations! You have completed the entire FakeNews Lit curriculum. You can print or download your certificate below.</p>
     </div>
     
-    <!-- Printable Certificate Area -->
+    <!-- printable cert area-->
     <div id="printArea" class="cert-canvas" style="border: 10px double var(--navy-dark); padding: 50px; text-align: center; background: white; margin-bottom: 20px;">
         <h3 style="text-transform: uppercase; color: #64748b; letter-spacing: 2px;">Certificate of Program Completion</h3>
         <p style="margin: 20px 0; color: #94a3b8; font-size: 1.1rem;">This is proudly awarded to</p>
@@ -55,7 +55,6 @@
         </div>
     </div>
     
-    <!-- added no-print to hide button when printing -->
     <button onclick="window.print();" class="btn btn-primary no-print">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
         Print / Download PDF
