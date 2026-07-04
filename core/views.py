@@ -221,8 +221,11 @@ def analytics_view(request):
     students_data = []
 
     for s in students:
-        if search_query and search_query not in s.username.lower() and search_query not in s.first_name.lower():
-            continue
+        if search_query:
+            # addwd combine first name, last name, username into string to search
+            full_searchable_name = f"{s.first_name} {s.last_name} {s.username}".lower()
+            if search_query not in full_searchable_name:
+                continue
             
         status = 'Certified' if Certificate.objects.filter(user=s).exists() else 'Active'
         if (filter_status == 'certified' and status != 'Certified') or (filter_status == 'active' and status != 'Active'):
