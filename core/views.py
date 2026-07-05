@@ -1,5 +1,4 @@
 # core/views.py
-import json
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
@@ -150,14 +149,14 @@ def lab_exercise(request, module_id):
     user = request.user
     module = get_object_or_404(Module, id=module_id)
     lab = get_object_or_404(Lab, module=module)
-    clues = lab.red_flags.all()
+    flags = lab.flags.all()
     submission = LabResult.objects.filter(user=user, lab=lab).first()
 
     if request.method == "POST" and not submission:
         user_choices = [int(x) for x in request.POST.getlist('flags')]
-        correct_clues = clues.filter(is_true_red_flag=True)
-        correct_count = sum(1 for c in correct_clues if c.id in user_choices)
-        score = (correct_count / correct_clues.count()) * 100 if correct_clues.exists() else 0
+        correct_flags = flags.filter(is_correct=True)
+        correct_count = sum(1 for c in correct_flags if c.id in user_choices)
+        score = (correct_count / correct_flags.count()) * 100 if correct_flags.exists() else 0
         
         new_result = LabResult.objects.create(user=user, lab=lab, score_percentage=score)
         new_result.selected_flags.set(user_choices)

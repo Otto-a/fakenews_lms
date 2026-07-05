@@ -27,10 +27,10 @@
             </div>
             
             <div class="module-list-group">
-                {% for flag in clues %}
-                <div class="checklist-item" style="border-color: {% if flag.is_true_red_flag %}var(--green-complete){% else %}#f87171{% endif %}; background: #f8fafc; cursor: default;">
-                    <span style="font-weight: bold; color: {% if flag.is_true_red_flag %}var(--green-complete){% else %}#ef4444{% endif %};">
-                        {% if flag.is_true_red_flag %}✅ Correct Flag{% else %}❌ False Flag{% endif %}
+                {% for flag in flags %}
+                <div class="checklist-item" style="border-color: {% if flag.is_correct %}var(--green-complete){% else %}#f87171{% endif %}; background: #f8fafc; cursor: default;">
+                    <span style="font-weight: bold; color: {% if flag.is_correct %}var(--green-complete){% else %}#ef4444{% endif %};">
+                        {% if flag.is_correct %}✅ Correct Flag{% else %}❌ False Flag{% endif %}
                     </span>
                     <span style="margin-left: 10px; color: var(--text-main);">{{ flag.label }}</span>
                 </div>
@@ -45,7 +45,7 @@
             <form method="POST">
                 {% csrf_token %}
                 <div style="margin: 20px 0;">
-                    {% for flag in clues %}
+                    {% for flag in flags %}
                     <label class="checklist-item" style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 10px;">
                         <input type="checkbox" name="flags" value="{{ flag.id }}" style="margin-top: 3px; cursor: pointer;">
                         <span style="font-size: 0.95rem; line-height: 1.4; color: var(--text-main);">{{ flag.label }}</span>

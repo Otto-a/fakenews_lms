@@ -15,7 +15,7 @@
         
         <form method="post">
             {% csrf_token %}
-            {% if form.errors %}
+            {% if form.errors %}<!--general error message-->
                 <div class="error-banner">
                     Please correct the errors highlighted below.
                 </div>
@@ -23,10 +23,10 @@
             
             {% for field in form %}
                 <div class="auth-form-group">
-                    <label>{{ field.label }}</label>
-                    {{ field }}
+                    <label>{{ field.label }}</label> <!--e.g FirstName-->
+                    {{ field }} <!--like txtbox,passwd field-->
                     {% if field.errors %}
-                        <small style="color: #ef4444;">{{ field.errors.0 }}</small>
+                        <small style="color: #ef4444;">{{ field.errors.0 }}</small><!--show first error-->
                     {% endif %}
                 </div>
             {% endfor %}

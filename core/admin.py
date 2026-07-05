@@ -2,9 +2,9 @@
 from django.contrib import admin
 from .models import Module, Lesson, Progress, Question, QuizResult, Lab, RedFlag, LabResult, Certificate
 
-class LessonInline(admin.TabularInline):
+class LessonInline(admin.TabularInline):#inside mod page and in agrid
     model = Lesson
-    extra = 1
+    extra = 1 #add 1 extra row for new less
 
 class QuestionInline(admin.TabularInline):
     model = Question
@@ -17,11 +17,11 @@ class RedFlagInline(admin.TabularInline):
 @admin.register(Module)
 class ModuleAdmin(admin.ModelAdmin):
     list_display = ('code', 'title', 'order')
-    inlines = [LessonInline, QuestionInline]
+    inlines = [LessonInline, QuestionInline]#add this models to the module admin page
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
-    list_display = ('title', 'module', 'order')
+    list_display = ('title', 'module', 'order') #list view in this order
 
 @admin.register(Progress)
 class ProgressAdmin(admin.ModelAdmin):

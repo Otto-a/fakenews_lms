@@ -4,8 +4,9 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # path to djangos built-in authentication URLs(login,logout)
     path('accounts/', include('django.contrib.auth.urls')),
     
-    # Change 'core/' to '' to mount the app directly at the root address
+    #paths from my core app
     path('', include('core.urls')), 
 ]

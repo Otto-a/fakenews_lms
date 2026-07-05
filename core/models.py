@@ -1,4 +1,4 @@
-# core/models.py
+#core/models.py
 import uuid
 from django.db import models
 from django.contrib.auth.models import User
@@ -68,7 +68,7 @@ class Lab(models.Model):
 class RedFlag(models.Model):
     lab = models.ForeignKey(Lab, on_delete=models.CASCADE, related_name='red_flags')
     label = models.CharField(max_length=255)
-    is_true_red_flag = models.BooleanField(default=True)
+    is_correct = models.BooleanField(default=True) # changed
 
 class LabResult(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

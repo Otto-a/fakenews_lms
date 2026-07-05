@@ -54,7 +54,7 @@
                 <a href="{% url 'lesson_detail' next_lesson.id %}" class="btn btn-primary">Next Lesson →</a>
             {% else %}
                 <div style="display: flex; gap: 10px;">
-                    <!--  render practical lab button if a lab exists in the db -->
+                    <!--   practical lab button if a lab exists in the db -->
                     {% if module.labs.exists %}
                         <a href="{% url 'lab_exercise' module.id %}" class="btn btn-accent">Enter Practical Lab</a>
                     {% endif %}
