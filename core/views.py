@@ -162,7 +162,7 @@ def lab_exercise(request, module_id):
         new_result.selected_flags.set(user_choices)
         return redirect('lab_exercise', module_id=module.id)
 
-    return render(request, 'core/lab_exercise.html', {'lab': lab, 'clues': clues, 'submission': submission, 'module': module})
+    return render(request, 'core/lab_exercise.html', {'lab': lab, 'flags': flags, 'submission': submission, 'module': module})
 
 @login_required
 def certificates_view(request):

@@ -42,7 +42,7 @@ class LabAdmin(admin.ModelAdmin):
 
 @admin.register(RedFlag)
 class RedFlagAdmin(admin.ModelAdmin):
-    list_display = ('label', 'lab', 'is_true_red_flag')
+    list_display = ('label', 'lab', 'is_correct')
 
 @admin.register(LabResult)
 class LabResultAdmin(admin.ModelAdmin):
