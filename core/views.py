@@ -9,16 +9,16 @@ from django.db.models import Avg
 from .forms import RegisterForm
 from .models import Module, Lesson, Progress, Question, QuizResult, Lab, LabResult, Certificate
 
-# Helper: One single place to check sequential module locking rules
+# check whether the next module is unlocked.
 def is_unlocked(user, module):
     if module.order == 1:
         return True
-    return QuizResult.objects.filter(user=user, module__order=module.order - 1, passed=True).exists()
+    return QuizResult.objects.filter(user=user, module__order=module.order - 1, passed=True).exists() # Previous module must be passed first.
 
 def home(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
-    return render(request, 'core/home.html', {'modules': Module.objects.all().order_by('order')})
+    return render(request, 'core/home.html') 
 
 def register_user(request):
     if request.user.is_authenticated:
@@ -43,6 +43,7 @@ def dashboard(request):
         total = m.lessons.count()
         done = Progress.objects.filter(user=user, lesson__module=m, completed=True).count()
         progress_pct = int((done / total) * 100) if total > 0 else 0
+        # show  learner's progress for each module.
         
         passed_quiz = QuizResult.objects.filter(user=user, module=m, passed=True).exists()
         unlocked = is_unlocked(user, m)
@@ -73,6 +74,7 @@ def module_list(request):
     for m in Module.objects.all().order_by('order'):
         unlocked = is_unlocked(request.user, m)
         completed = QuizResult.objects.filter(user=request.user, module=m, passed=True).exists()
+        # builds  list of modules shown on the page.
         modules_data.append({
             'module': m,
             'lessons_count': m.lessons.count(),
@@ -91,6 +93,7 @@ def lesson_detail(request, lesson_id):
     if not is_unlocked(user, module):
         return redirect('module_list')
 
+    # marks lesson as complete when it is opened.
     Progress.objects.get_or_create(user=user, lesson=lesson, defaults={'completed': True})
 
     lessons_list = module.lessons.all().order_by('order')
@@ -126,9 +129,11 @@ def quiz_detail(request, module_id):
         correct_count = sum(1 for q in questions if request.POST.get(f"question_{q.id}") == q.correct_option)
         score = (correct_count / questions.count()) * 100 if questions.exists() else 0
         
-        QuizResult.objects.create(user=user, module=module, score_percentage=score, passed=(score >= 80.0))
+        QuizResult.objects.create(user=user, module=module, score_percentage=score, passed=(score >= 60.0))
 
-        if not Module.objects.exclude(quizresult__user=user, quizresult__passed=True).exists():
+        # Give a certificate when all quizzes have been passed.
+        passed_modules = Module.objects.filter(quizresult__user=user, quizresult__passed=True).distinct()
+        if passed_modules.count() == Module.objects.count():
             Certificate.objects.get_or_create(user=user)
 
         return redirect('quiz_detail', module_id=module.id)
@@ -149,12 +154,13 @@ def lab_exercise(request, module_id):
     user = request.user
     module = get_object_or_404(Module, id=module_id)
     lab = get_object_or_404(Lab, module=module)
-    flags = lab.flags.all()
+    flags = lab.red_flags.all()
     submission = LabResult.objects.filter(user=user, lab=lab).first()
 
     if request.method == "POST" and not submission:
         user_choices = [int(x) for x in request.POST.getlist('flags')]
         correct_flags = flags.filter(is_correct=True)
+        # Calculate the lab score from the selected flags.
         correct_count = sum(1 for c in correct_flags if c.id in user_choices)
         score = (correct_count / correct_flags.count()) * 100 if correct_flags.exists() else 0
         
@@ -179,7 +185,7 @@ def analytics_view(request):
     #  enrollment over Time (vertical Bar Chart)
     month_counts = {}
     for s in students:
-        month_name = s.date_joined.strftime('%b %Y') if s.date_joined else "Unknown"
+        month_name = s.date_joined.strftime('%B %Y') if s.date_joined else "Unknown"
         month_counts[month_name] = month_counts.get(month_name, 0) + 1
 
     max_enrollment = max(month_counts.values()) if month_counts else 1
@@ -215,13 +221,13 @@ def analytics_view(request):
         global_completion_rate = 0
 
     # student filter Table
-    filter_status = request.GET.get('status', 'all')
+    filter_status = request.GET.get('status', 'all') #def to all if not provideds
     search_query = request.GET.get('q', '').lower()
     students_data = []
 
     for s in students:
         if search_query:
-            # addwd combine first name, last name, username into string to search
+            # Match the search text with the student's name.
             full_searchable_name = f"{s.first_name} {s.last_name} {s.username}".lower()
             if search_query not in full_searchable_name:
                 continue
