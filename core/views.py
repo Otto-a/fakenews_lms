@@ -160,9 +160,14 @@ def lab_exercise(request, module_id):
     if request.method == "POST" and not submission:
         user_choices = [int(x) for x in request.POST.getlist('flags')]
         correct_flags = flags.filter(is_correct=True)
-        # Calculate the lab score from the selected flags.
-        correct_count = sum(1 for c in correct_flags if c.id in user_choices)
-        score = (correct_count / correct_flags.count()) * 100 if correct_flags.exists() else 0
+        points = 0
+        for f in flags:
+            user_checked = f.id in user_choices
+            # Award a point if they checked a True flag, OR ignored a False flag
+            if f.is_correct == user_checked:
+                points += 1
+                
+        score = (points / flags.count()) * 100 if flags.exists() else 0
         
         new_result = LabResult.objects.create(user=user, lab=lab, score_percentage=score)
         new_result.selected_flags.set(user_choices)

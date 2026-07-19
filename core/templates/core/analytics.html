@@ -27,16 +27,16 @@
 <div class="panel-row">
     
     <!-- 1: Enrollment Over Time  -->
-    <div class="panel" style="display: flex; flex-direction: column;">
+    <div class="panel" style="display: flex; flex-direction: column; min-width: 0;">
         <h2 style="margin-bottom: 10px;">Student Enrollment Over Time</h2>
         <div style="width: 100%; overflow-x: auto; padding-bottom: 10px;">
             <div style="display: flex; align-items: flex-end; gap: 15px; height: 200px; padding-top: 20px; border-bottom: 2px solid var(--border-color); min-width: max-content; padding-bottom: 5px;">
                 {% for item in enrollment_data %}
-                <div style="display: flex; flex-direction: column; align-items: center; justify-content: flex-end; width: 55px; height: 100%;">
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: flex-end; min-width: 55px; height: 100%;">
                     <div style="background-color: var(--brand-blue); width: 100%; height: {{ item.pct }}%; min-height: 20px; border-radius: 4px 4px 0 0; display: flex; justify-content: center; color: white; font-size: 0.8rem; font-weight: bold; padding-top: 5px;">
                         {{ item.count }}
                     </div>
-                    <span style="font-size: 0.75rem; color: #64748b; margin-top: 8px; white-space: nowrap;">{{ item.month }}</span>
+                    <span style="font-size: 0.75rem; color: #64748b; margin-top: 8px;  text-align: center; line-height: 1.2;">{{ item.month }}</span>
                 </div>
                 {% empty %}
                 <p style="color: #64748b; width: 100%; text-align: center; align-self: center;">No enrollments recorded.</p>
@@ -46,13 +46,13 @@
     </div>
     
     <!--  2 module completion rates -->
-    <div class="panel">
+    <div class="panel" style="min-width: 0;"">
         <h2>Module Completion Rates (%)</h2>
         <div style="display: flex; flex-direction: column; gap: 18px;">
             {% for item in completion_data %}
             <div>
                 <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px;">
-                    <span>{{ item.code }}: {{ item.title }}</span>
+                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px;">{{ item.code }}: {{ item.title }}</span>
                     <span style="color: var(--brand-blue);">{{ item.pct }}%</span>
                 </div>
                 <div style="width: 100%; height: 10px; background-color: #f1f5f9; border-radius: 5px; overflow: hidden; border: 1px solid var(--border-color);">

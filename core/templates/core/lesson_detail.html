@@ -3,39 +3,43 @@
 {% block page_title %}{{ module.code }}: {{ module.title }}{% endblock %}
 
 {% block content %}
-<!--  2-column  grid -->
+<!-- 2-column grid -->
 <div class="lesson-split-view">
-    
+
     <!-- left Col: lesson selector siidebar -->
-    <div style="background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 20px;">
-        <h3 style="margin-bottom: 15px; color: var(--navy-dark); font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Module Lessons</h3>
-        <div style="display: flex; flex-direction: column; gap: 8px;">
+    <div class="panel">
+        <h2>Module Lessons</h2>
+        
+        <!-- .module-list-group & .module-item -->
+        <div class="module-list-group">
             {% for item in lessons_data %}
             <a href="{% url 'lesson_detail' item.lesson.id %}" 
-               style="display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 6px; text-decoration: none; font-size: 0.95rem; transition: all 0.2s;
-                      {% if item.active %}background-color: #eff6ff; color: var(--brand-blue); font-weight: 600;{% else %}color: var(--text-main);{% endif %}">
-                <span>{% if item.completed %}✅{% else %}📄{% endif %}</span>
-                <span>{{ item.lesson.title }}</span>
+               class="module-item" 
+               style="text-decoration: none; color: var(--text-main); {% if item.active %}background-color: #eff6ff; border-color: var(--brand-blue); font-weight: 600; color: var(--brand-blue);{% endif %}">
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <span>{% if item.completed %}✅{% else %}📄{% endif %}</span>
+                    <span>{{ item.lesson.title }}</span>
+                </div>
             </a>
             {% endfor %}
         </div>
         
         <!-- module progress counters -->
-        <div style="margin-top: 25px; border-top: 1px solid var(--border-color); padding-top: 15px; font-size: 0.85rem; color: #64748b;">
-            <span style="text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Module Progress</span>
-            <p style="margin-top: 5px; font-size: 1rem; color: var(--navy-dark);"><strong>{{ completed_lessons_count }} of {{ total_lessons_count }} done</strong></p>
+        <div style="margin-top: 25px; border-top: 1px solid var(--border-color); padding-top: 15px; text-align: center;">
+            <span class="badge-tag badge-active" style="font-size: 0.85rem;">
+                Progress: {{ completed_lessons_count }} of {{ total_lessons_count }} done
+            </span>
         </div>
     </div>
 
-    <!-- right col-video & lecture reading panel -->
-    <div class="panel" style="padding: 30px; margin-bottom: 0;">
-        <h2 style="font-size: 1.6rem; margin-bottom: 20px; color: var(--navy-dark);">{{ lesson.title }}</h2>
+    <!-- right col: video & lecture reading panel -->
+    <div class="panel">
+        <h2 style="font-size: 1.6rem;">{{ lesson.title }}</h2>
         
         {% if lesson.video_url %}
-        <!-- video player -->
-        <div style="width: 100%; max-width: 850px; margin-bottom: 25px; border-radius: 8px; overflow: hidden; background: #000; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+        <!-- .video-container  16:9 ratio &auto sizing -->
+        <div class="video-container">
             <iframe src="{{ lesson.video_url }}" 
-                    style="width: 100%; height: 450px; display: block; border: 0;" 
                     referrerpolicy="strict-origin-when-cross-origin" 
                     allowfullscreen>
             </iframe>
@@ -43,18 +47,17 @@
         {% endif %}
         
         <!-- reading content area -->
-        <div style="line-height: 1.8; font-size: 1.05rem; color: var(--text-main); margin-bottom: 30px;">
+        <div style="line-height: 1.8; font-size: 1.05rem; margin-bottom: 30px;">
             {{ lesson.content|safe }}
         </div>
 
-        <!-- bottom nav controls -->
-        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 20px;">
+        <!-- bottom nav controls  .filter-bar & .filter-form space -->
+        <div class="filter-bar" style="border-top: 1px solid var(--border-color); padding-top: 20px; margin-bottom: 0;">
             <span></span>
             {% if next_lesson %}
                 <a href="{% url 'lesson_detail' next_lesson.id %}" class="btn btn-primary">Next Lesson →</a>
             {% else %}
-                <div style="display: flex; gap: 10px;">
-                    <!--   practical lab button if a lab exists in the db -->
+                <div class="filter-form">
                     {% if module.labs.exists %}
                         <a href="{% url 'lab_exercise' module.id %}" class="btn btn-accent">Enter Practical Lab</a>
                     {% endif %}
