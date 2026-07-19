@@ -48,19 +48,18 @@ def dashboard(request):
         passed_quiz = QuizResult.objects.filter(user=user, module=m, passed=True).exists()
         unlocked = is_unlocked(user, m)
 
-        status = 'locked'
         if passed_quiz:
             status, completed_count, progress_pct = 'completed', completed_count + 1, 100
         elif unlocked:
             status = 'active'
+        else:
+            status = 'locked'
 
         learning_path.append({'module': m, 'status': status, 'progress': progress_pct})
 
     quiz_avg = QuizResult.objects.filter(user=user).aggregate(Avg('score_percentage'))['score_percentage__avg'] or 0.0
-    lab_results = LabResult.objects.filter(user=user)
-    lab_total = sum(r.score_percentage for r in lab_results)
-    lab_avg = (lab_total / len(lab_results)) if len(lab_results) > 0 else 0.0
-
+    lab_avg = LabResult.objects.filter(user=user).aggregate(Avg('score_percentage'))['score_percentage__avg'] or 0.0
+    
     return render(request, 'core/dashboard.html', {
         'enrolled_count': modules.count(),
         'completed_count': completed_count,
@@ -90,7 +89,7 @@ def lesson_detail(request, lesson_id):
     lesson = get_object_or_404(Lesson, id=lesson_id)
     module = lesson.module
 
-    if not is_unlocked(user, module):
+    if is_unlocked(user, module)== False:
         return redirect('module_list')
 
     # marks lesson as complete when it is opened.
@@ -159,11 +158,10 @@ def lab_exercise(request, module_id):
 
     if request.method == "POST" and not submission:
         user_choices = [int(x) for x in request.POST.getlist('flags')]
-        correct_flags = flags.filter(is_correct=True)
         points = 0
         for f in flags:
             user_checked = f.id in user_choices
-            # Award a point if they checked a True flag, OR ignored a False flag
+            # award a point if they checked a True flag, OR ignored a False flag
             if f.is_correct == user_checked:
                 points += 1
                 
@@ -191,7 +189,7 @@ def analytics_view(request):
     month_counts = {}
     for s in students:
         month_name = s.date_joined.strftime('%B %Y') if s.date_joined else "Unknown"
-        month_counts[month_name] = month_counts.get(month_name, 0) + 1
+        month_counts[month_name] = month_counts.get(month_name, 0) + 1 #does this month already exist in our tally dictionary?
 
     max_enrollment = max(month_counts.values()) if month_counts else 1
     enrollment_data = []
@@ -202,18 +200,18 @@ def analytics_view(request):
 
     # module Completion Rates (Horizontal Bar Chart)
     modules = Module.objects.all().order_by('order')
-    completion_data = []
+    completion_data = [] #progress_ data for chart
     total_completions = 0
 
     for m in modules:
         passed_results = QuizResult.objects.filter(module=m, passed=True)
-        unique_students_who_passed = []
+        unique_students_who_passed = [] # keep track of unique student IDs who have passed this quiz.
         for result in passed_results:
             if result.user_id not in unique_students_who_passed:
                 unique_students_who_passed.append(result.user_id)
         
-        completions = len(unique_students_who_passed)
-        total_completions += completions
+        completions = len(unique_students_who_passed) #no who have completed this module
+        total_completions += completions #increment students per module
         
         pct = int((completions / total_students) * 100) if total_students > 0 else 0
         completion_data.append({'code': m.code, 'title': m.title, 'pct': pct})
@@ -228,22 +226,21 @@ def analytics_view(request):
     # student filter Table
     filter_status = request.GET.get('status', 'all') #def to all if not provideds
     search_query = request.GET.get('q', '').lower()
-    students_data = []
+    students_data = [] #compiled records
 
     for s in students:
         if search_query:
-            # Match the search text with the student's name.
+            # match the search text with the student's name.
             full_searchable_name = f"{s.first_name} {s.last_name} {s.username}".lower()
             if search_query not in full_searchable_name:
-                continue
+                continue #skips this student go to nxt
             
         status = 'Certified' if Certificate.objects.filter(user=s).exists() else 'Active'
         if (filter_status == 'certified' and status != 'Certified') or (filter_status == 'active' and status != 'Active'):
-            continue
+            continue #skips this student go to nxt
 
         results = QuizResult.objects.filter(user=s)
-        total_score = sum(r.score_percentage for r in results)
-        avg_score = (total_score / len(results)) if len(results) > 0 else 0.0
+        avg_score = results.aggregate(Avg('score_percentage'))['score_percentage__avg'] or 0.0
 
         students_data.append({
             'student': s,
@@ -251,16 +248,14 @@ def analytics_view(request):
             'avg_score': round(avg_score, 1),
             'status': status
         })
-
+    # not performed a search /filter
     students_list = students_data[:5] if not search_query and filter_status == 'all' else students_data
     
-    all_results = QuizResult.objects.all()
-    global_score_sum = sum(r.score_percentage for r in all_results)
-    global_quiz_avg = (global_score_sum / len(all_results)) if len(all_results) > 0 else 0.0
+    global_quiz_avg = QuizResult.objects.aggregate(Avg('score_percentage'))['score_percentage__avg'] or 0.0
 
     return render(request, 'core/analytics.html', {
         'total_enrollments': total_students,
-        'global_completion_rate': global_completion_rate,
+        'global_completion_rate': global_completion_rate, #all mods
         'global_quiz_avg': round(global_quiz_avg, 1),
         'certified_students_count': Certificate.objects.count(),
         'students_data': students_list,
