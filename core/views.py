@@ -13,8 +13,10 @@ from .models import Module, Lesson, Progress, Question, QuizResult, Lab, LabResu
 def is_unlocked(user, module):
     if module.order == 1:
         return True
-    return QuizResult.objects.filter(user=user, module__order=module.order - 1, passed=True).exists() # Previous module must be passed first.
-
+    previous_modules = Module.objects.filter(order__lt=module.order)
+    passed_modules = previous_modules.filter(quizresult__user=user, quizresult__passed=True).distinct()#-double count mod
+    return previous_modules.count() == passed_modules.count()     #no dont match(skipped or failed-lock Previous module must be passed first.
+     
 def home(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
