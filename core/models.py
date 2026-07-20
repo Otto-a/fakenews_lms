@@ -21,7 +21,7 @@ class Lesson(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
     video_url = models.URLField(blank=True, null=True)
-    duration_minutes = models.PositiveIntegerField(default=10)
+   # duration_minutes = models.PositiveIntegerField(default=10) removed not  using
     order = models.PositiveIntegerField(default=1)
 
     class Meta:
@@ -46,7 +46,7 @@ class Question(models.Model):
     choice_b = models.CharField(max_length=255)
     choice_c = models.CharField(max_length=255)
     choice_d = models.CharField(max_length=255)
-    correct_option = models.CharField(max_length=1, choices=(('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D')))
+    correct_option = models.CharField(max_length=1, choices=(('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D'))) #stored value and labeltuple
 
 class QuizResult(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -68,7 +68,7 @@ class Lab(models.Model):
 class RedFlag(models.Model):
     lab = models.ForeignKey(Lab, on_delete=models.CASCADE, related_name='red_flags')
     label = models.CharField(max_length=255)
-    is_correct = models.BooleanField(default=True) # changed
+    is_correct = models.BooleanField(default=True) # changedfrom is_true_red_flag
 
 class LabResult(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -81,3 +81,7 @@ class Certificate(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='certificate')
     issued_date = models.DateField(auto_now_add=True)
+
+# each table row stores atomic values, and no repeating groups or arrays
+#every non-key column depends on the whole primary key, not just part of it.-comp key 
+#no non-key column depends on another non-key column; every attribute must depend only on the primary key.e.g badge name from module

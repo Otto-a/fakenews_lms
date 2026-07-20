@@ -28,6 +28,7 @@ class LessonAdmin(admin.ModelAdmin):
 @admin.register(Progress)
 class ProgressAdmin(admin.ModelAdmin):
     list_display = ('user', 'lesson', 'completed', 'updated_at')
+    search_fields=('user__username', 'lesson__title')
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
