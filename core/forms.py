@@ -5,8 +5,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
 class RegisterForm(UserCreationForm): #ext Built in
-    first_name = forms.CharField(max_length=150, required=True)
-    last_name = forms.CharField(max_length=150, required=True)
+    first_name = forms.CharField(max_length=150, required=True ,min_length=2)
+    last_name = forms.CharField(max_length=150, required=True,min_length=2)
     email = forms.EmailField(required=True)
 
     class Meta(UserCreationForm.Meta): # confg for form keep existing add new fields
