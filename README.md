@@ -2,6 +2,10 @@
 
 A web-based educational platform designed to empower digital consumers with the critical thinking skills needed to identify, verify and understand the impact of fake news and misinformation. 
 
+## System Visualizations
+![Dashboard Visualization](https://github.com/Otto-a/HealthConnect-Final-Analytics---Decision-Support-Package/blob/main/healthconnect_chart_visualizations.png)
+
+
 ## 🚀 Key Features
 
 * **Progressive Learning Engine:** A sequential curriculum where users must watch lessons and pass a module quiz (with a score of at least 60%) to unlock the next level.
