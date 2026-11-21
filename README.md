@@ -3,7 +3,7 @@
 A web-based educational platform designed to empower digital consumers with the critical thinking skills needed to identify, verify and understand the impact of fake news and misinformation. 
 
 ## System Visualizations
-![Dashboard Visualization](https://github.com/Otto-a/HealthConnect-Final-Analytics---Decision-Support-Package/blob/main/healthconnect_chart_visualizations.png)
+![Dashboard Visualization](https://github.com/Otto-a/fakenews_lms/blob/main/Fakenews%20lms%20dashboard.png)
 
 
 ## 🚀 Key Features
